@@ -11,6 +11,10 @@ import DashboardPage      from './pages/DashboardPage';
 import SubscriptionsPage  from './pages/SubscriptionsPage';
 import AlertsPage         from './pages/AlertsPage';
 import ProfilePage        from './pages/ProfilePage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import HelpCenterPage from './pages/HelpCenterpage';
+import RewardsPage from './pages/RewardsPage';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
@@ -30,7 +34,7 @@ function App() {
         <Routes>
 
           {/* Public routes */}
-          <Route path="/"                element={<Navigate to="/login" />} />
+          <Route path="/"                element={<LandingPage />} />
           <Route path="/login"           element={<LoginPage />} />
           <Route path="/signup"          element={<SignupPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -38,10 +42,13 @@ function App() {
           {/* Protected routes — all share Layout (sidebar + topbar) */}
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
-              <Route path="/dashboard"     element={<DashboardPage />} />
-              <Route path="/subscriptions" element={<SubscriptionsPage />} />
-              <Route path="/alerts"        element={<AlertsPage />} />
-              <Route path="/profile"       element={<ProfilePage />} />
+              <Route path="/dashboard"      element={<DashboardPage />} />
+              <Route path="/subscriptions"  element={<SubscriptionsPage />} />
+              <Route path="/alerts"         element={<AlertsPage />} />
+              <Route path="/profile"        element={<ProfilePage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/help"           element={<HelpCenterPage />} />
+              <Route path="/rewards"        element={<RewardsPage />} />
             </Route>
           </Route>
 

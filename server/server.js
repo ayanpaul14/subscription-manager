@@ -5,7 +5,6 @@ const cors       = require("cors");
 const connectDB  = require("./config/db");
 const { startReminderCron } = require("./utils/reminderCron");
 
-
 // Connect to MongoDB
 connectDB();
 
@@ -13,7 +12,10 @@ const app = express();
 
 // ── Middleware ─────────────────────────────────────────────────
 app.use(cors({
-  origin:  process.env.CLIENT_URL,
+  origin: [
+    process.env.CLIENT_URL,
+    "http://localhost:5173"
+  ],
   credentials: true,
 }));
 app.use(express.json());
@@ -30,7 +32,6 @@ app.get("/api/health", (req, res) => {
     time:    new Date().toISOString(),
   });
 });
-
 
 // ── 404 handler ────────────────────────────────────────────────
 app.use((req, res) => {

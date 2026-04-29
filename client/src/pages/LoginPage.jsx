@@ -7,7 +7,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
 import toast from "react-hot-toast";
-import { signInWithGoogle } from "../utils/firebase";
 import {
   FiMail, FiLock, FiEye, FiEyeOff, FiAlertCircle
 } from "react-icons/fi";
@@ -32,7 +31,6 @@ const bubbles = [
 export default function LoginPage() {
   const [showPass, setShowPass]           = useState(false);
   const [loading, setLoading]             = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const { login }                         = useAuth();
   const navigate                          = useNavigate();
 
@@ -52,28 +50,6 @@ export default function LoginPage() {
       toast.error(err.response?.data?.message || "Login failed. Try again.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  // ── Google Login ───────────────────────────────────────────
-  const handleGoogleLogin = async () => {
-    try {
-      setGoogleLoading(true);
-      const { user } = await signInWithGoogle();
-      const res = await api.post("/auth/google", {
-        name:  user.name,
-        email: user.email,
-        uid:   user.uid,
-        photo: user.photo,
-      });
-      login(res.data.user, res.data.token);
-      toast.success(`Welcome, ${res.data.user.name?.split(" ")[0]}! 🎉`);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("Google login error:", err);
-      toast.error("Google login failed. Try again.");
-    } finally {
-      setGoogleLoading(false);
     }
   };
 
@@ -160,58 +136,6 @@ export default function LoginPage() {
               </motion.p>
             </div>
 
-            {/* ── Google Button ── */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}>
-              <motion.button
-                type="button"
-                onClick={handleGoogleLogin}
-                disabled={googleLoading}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full py-3.5 rounded-xl text-sm font-semibold
-                           flex items-center justify-center gap-3 transition duration-200
-                           disabled:opacity-60 disabled:cursor-not-allowed"
-                style={{
-                  background: "rgba(255,255,255,0.07)",
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  color: "#e2e8f0",
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.12)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.07)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
-                }}
-              >
-                {googleLoading ? (
-                  <>
-                    <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor"
-                              strokeWidth="3" strokeDasharray="30" strokeDashoffset="10" />
-                    </svg>
-                    Connecting to Google...
-                  </>
-                ) : (
-                  <>
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
-                      alt="Google" className="w-5 h-5"
-                    />
-                    Continue with Google
-                  </>
-                )}
-              </motion.button>
-            </motion.div>
-
-            {/* ── Divider ── */}
-            <div className="flex items-center gap-3 my-5">
-              <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
-              <span className="text-xs" style={{ color: "#4b5563" }}>or sign in with email</span>
-              <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
-            </div>
 
             {/* ── Email/Password Form ── */}
             <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
